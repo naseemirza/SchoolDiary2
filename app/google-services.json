@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "297088598432",
+    "firebase_url": "https://schooldiary-9d6aa.firebaseio.com",
+    "project_id": "schooldiary-9d6aa",
+    "storage_bucket": "schooldiary-9d6aa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:297088598432:android:b074be6a47b5bb7e",
+        "android_client_info": {
+          "package_name": "com.lead.infosystems.schooldiary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "297088598432-8pukokoa21svnpplagmr6uasfs99l1tu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lead.infosystems.schooldiary",
+            "certificate_hash": "ACA446B44C7BBAA9593BA292C9DF62C8F04286CF"
+          }
+        },
+        {
+          "client_id": "297088598432-bbkermrl219aduqnmnn3keoc46id5rrg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWK90_jZOYS3eSvpnz888MqDIeD0-Iq98"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "297088598432-bbkermrl219aduqnmnn3keoc46id5rrg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

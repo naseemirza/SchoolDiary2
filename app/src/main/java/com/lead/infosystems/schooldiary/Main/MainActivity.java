@@ -1,0 +1,203 @@
+package com.lead.infosystems.schooldiary.Main;
+
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.lead.infosystems.schooldiary.Attendance;
+import com.lead.infosystems.schooldiary.Data.UserDataSP;
+import com.lead.infosystems.schooldiary.Fees;
+import com.lead.infosystems.schooldiary.Login;
+import com.lead.infosystems.schooldiary.ModelQuestionPapers;
+import com.lead.infosystems.schooldiary.Profile.Profile;
+import com.lead.infosystems.schooldiary.Progress_Report;
+import com.lead.infosystems.schooldiary.R;
+import com.lead.infosystems.schooldiary.ServerConnection.ServerConnect;
+import com.lead.infosystems.schooldiary.StudentDiery;
+
+import java.io.IOException;
+
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
+    Toolbar toolbar;
+    DrawerLayout drawer;
+    ActionBarDrawerToggle toggle;
+    NavigationView navigationView;
+    FragmentTransaction frag;
+    UserDataSP userDataSP;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        userDataSP = new UserDataSP(getApplicationContext());
+        new RegistoreUserCloudID(getApplicationContext()).execute();
+        toolbar  = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        MainTabAdapter frag = new MainTabAdapter();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.main_con,frag);
+        transaction.commit();
+
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navViewSet();
+
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void navViewSet(){
+        View holder = navigationView.getHeaderView(0);
+        TextView name = (TextView) holder.findViewById(R.id.name);
+        TextView rollnum = (TextView) holder.findViewById(R.id.rollnum);
+        name.setText(userDataSP.getUserData(userDataSP.FIRST_NAME)+" "+userDataSP.getUserData(userDataSP.LAST_NAME));
+        rollnum.setText(userDataSP.getUserData(userDataSP.ROLL_NO).toString());
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            FragmentManager fn = getSupportFragmentManager();
+            fn.popBackStack("tag",FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the FragTabHome/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_profile) {
+            startActivity(new Intent(this,Profile.class));
+        } else if (id == R.id.nav_diery) {
+            StudentDiery blankFragment = new StudentDiery();
+            frag = getSupportFragmentManager().beginTransaction();
+            frag.replace(R.id.main_con,blankFragment);
+            frag.addToBackStack("tag");
+            frag.commit();
+
+        } else if (id == R.id.nav_attendance) {
+            Attendance blankFragment = new Attendance();
+            frag = getSupportFragmentManager().beginTransaction();
+            frag.replace(R.id.main_con,blankFragment);
+            frag.addToBackStack("tag");
+            frag.commit();
+        } else if (id == R.id.nav_progress) {
+            Progress_Report blankFragment = new Progress_Report();
+            frag = getSupportFragmentManager().beginTransaction();
+            frag.replace(R.id.main_con,blankFragment);
+            frag.addToBackStack("tag");
+            frag.commit();
+        } else if (id == R.id.nav_fees) {
+            Fees blankFragment = new Fees();
+            frag = getSupportFragmentManager().beginTransaction();
+            frag.replace(R.id.main_con,blankFragment);
+            frag.addToBackStack("tag");
+            frag.commit();
+        } else if (id == R.id.nav_question_papers) {
+            ModelQuestionPapers blankFragment = new ModelQuestionPapers();
+            frag = getSupportFragmentManager().beginTransaction();
+            frag.replace(R.id.main_con,blankFragment);
+            frag.addToBackStack("tag");
+            frag.commit();
+        } else if (id == R.id.nav_test) {
+
+        } else if (id == R.id.nav_event) {
+
+        }  else if (id == R.id.nav_teachers_feedback) {
+
+        } else if (id == R.id.nav_suggestions) {
+
+        }else if (id == R.id.nav_Principle) {
+
+        }else if (id == R.id.nav_management) {
+
+        }else if (id == R.id.nav_settings) {
+
+        }else if (id == R.id.nav_log_out) {
+            userDataSP.clearUserData();
+            startActivity(new Intent(getApplicationContext(), Login.class));
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private class RegistoreUserCloudID extends AsyncTask<String,Void,String>{
+        Context context;
+        ServerConnect serverConnect;
+        UserDataSP userDataSP;
+
+        RegistoreUserCloudID(Context context){
+            this.context = context;
+            serverConnect = new ServerConnect();
+            userDataSP = new UserDataSP(context);
+        }
+        @Override
+        protected String doInBackground(String... params) {
+
+            Log.e("INBACKGROUND","bbbbbbbbbbbbbbbbbbbbbbbbbb");
+            if(serverConnect.checkInternetConenction(context) && !userDataSP.getUserData(userDataSP.CLOUD_ID).isEmpty()){
+                Uri.Builder builder = new Uri.Builder();
+                builder.appendQueryParameter(userDataSP.STUDENT_NUMBER, userDataSP.getUserData(userDataSP.STUDENT_NUMBER));
+                builder.appendQueryParameter("regid",userDataSP.getUserData(userDataSP.CLOUD_ID));
+                try {
+                    return serverConnect.downloadUrl("reg_user.php",builder.build().getQuery());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }else{
+                Toast.makeText(getApplicationContext(),"Connection error...",Toast.LENGTH_SHORT).show();
+                return null;
+            }
+        }
+    }
+
+}

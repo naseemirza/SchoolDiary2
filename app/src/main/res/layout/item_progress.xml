@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ProgressBar
+        android:id="@+id/pBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"/>
+
+    <TextView
+        android:text="No More Items"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/no_more_items"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textAlignment="center"
+        android:textStyle="normal|italic" />
+
+</LinearLayout>
