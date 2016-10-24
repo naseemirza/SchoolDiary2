@@ -1,10 +1,12 @@
 package com.lead.infosystems.schooldiary.Main;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
@@ -47,7 +49,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         userDataSP = new UserDataSP(getApplicationContext());
-        new RegistoreUserCloudID(getApplicationContext()).execute();
+        if(ServerConnect.checkInternetConenction(this)) {
+            new RegistoreUserCloudID(this).execute();
+        }
         toolbar  = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -70,8 +74,8 @@ public class MainActivity extends AppCompatActivity
         View holder = navigationView.getHeaderView(0);
         TextView name = (TextView) holder.findViewById(R.id.name);
         TextView rollnum = (TextView) holder.findViewById(R.id.rollnum);
-        name.setText(userDataSP.getUserData(userDataSP.FIRST_NAME)+" "+userDataSP.getUserData(userDataSP.LAST_NAME));
-        rollnum.setText(userDataSP.getUserData(userDataSP.ROLL_NO).toString());
+        name.setText(userDataSP.getUserData(UserDataSP.FIRST_NAME)+" "+userDataSP.getUserData(UserDataSP.LAST_NAME));
+        rollnum.setText(userDataSP.getUserData(UserDataSP.ROLL_NO).toString());
     }
 
     @Override
@@ -116,7 +120,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(this,Profile.class));
         } else if (id == R.id.nav_diery) {
             StudentDiery blankFragment = new StudentDiery();
-            frag = getSupportFragmentManager().beginTransaction();
+        frag = getSupportFragmentManager().beginTransaction();
             frag.replace(R.id.main_con,blankFragment);
             frag.addToBackStack("tag");
             frag.commit();
@@ -170,31 +174,27 @@ public class MainActivity extends AppCompatActivity
     }
 
     private class RegistoreUserCloudID extends AsyncTask<String,Void,String>{
-        Context context;
-        ServerConnect serverConnect;
+        Activity activity;
         UserDataSP userDataSP;
 
-        RegistoreUserCloudID(Context context){
-            this.context = context;
-            serverConnect = new ServerConnect();
-            userDataSP = new UserDataSP(context);
+        RegistoreUserCloudID(Activity activity){
+            this.activity = activity;
+            userDataSP = new UserDataSP(activity.getApplicationContext());
         }
         @Override
         protected String doInBackground(String... params) {
 
-            Log.e("INBACKGROUND","bbbbbbbbbbbbbbbbbbbbbbbbbb");
-            if(serverConnect.checkInternetConenction(context) && !userDataSP.getUserData(userDataSP.CLOUD_ID).isEmpty()){
+            if(ServerConnect.checkInternetConenction(activity) && !userDataSP.getUserData(UserDataSP.CLOUD_ID).isEmpty()){
                 Uri.Builder builder = new Uri.Builder();
-                builder.appendQueryParameter(userDataSP.STUDENT_NUMBER, userDataSP.getUserData(userDataSP.STUDENT_NUMBER));
+                builder.appendQueryParameter(UserDataSP.STUDENT_NUMBER, userDataSP.getUserData(UserDataSP.STUDENT_NUMBER));
                 builder.appendQueryParameter("regid",userDataSP.getUserData(userDataSP.CLOUD_ID));
                 try {
-                    return serverConnect.downloadUrl("reg_user.php",builder.build().getQuery());
+                    return ServerConnect.downloadUrl("reg_user.php",builder.build().getQuery());
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;
                 }
             }else{
-                Toast.makeText(getApplicationContext(),"Connection error...",Toast.LENGTH_SHORT).show();
                 return null;
             }
         }

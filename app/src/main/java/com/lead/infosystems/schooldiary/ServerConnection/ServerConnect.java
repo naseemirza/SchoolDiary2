@@ -1,5 +1,6 @@
 package com.lead.infosystems.schooldiary.ServerConnection;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.widget.Toast;
@@ -16,10 +17,15 @@ import java.net.URL;
 
 public class ServerConnect {
 
-    Utils utils;
 
-    public String downloadUrl(String inurl, String postParaQuery) throws IOException {
-        URL url = new URL(utils.SERVER_URL+inurl);
+//    this function is for post query string generations
+//
+//        Uri.Builder builder = new Uri.Builder();
+//        builder.appendQueryParameter("Key",Value);
+//        String postParaQuery = builder.build().getEncodedQuery();
+
+    public static String downloadUrl(String inurl, String postParaQuery) throws IOException {
+        URL url = new URL(Utils.SERVER_URL+inurl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setDoInput(true);
         connection.setDoOutput(true);
@@ -30,12 +36,6 @@ public class ServerConnect {
 
         OutputStream outputStream = connection.getOutputStream();
         BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
-        //this function is for post query string generations
-        /*
-        Uri.Builder builder = new Uri.Builder();
-        builder.appendQueryParameter("Key",Value);
-        String postParaQuery = builder.build().getEncodedQuery();
-        */
         bufferedWriter.write(postParaQuery);
         bufferedWriter.flush();
         bufferedWriter.close();
@@ -51,9 +51,9 @@ public class ServerConnect {
         return result.toString();
     }
 
-    public boolean checkInternetConenction(Context context) {
+    public static boolean checkInternetConenction(Activity activity) {
         // get Connectivity Manager object to check connection
-        ConnectivityManager connec = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connec = (ConnectivityManager) activity.getSystemService(activity.CONNECTIVITY_SERVICE);
 
         // Check for network connections
         if (connec.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.CONNECTED ||
@@ -64,10 +64,19 @@ public class ServerConnect {
         } else if (
                 connec.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.DISCONNECTED ||
                         connec.getNetworkInfo(1).getState() == android.net.NetworkInfo.State.DISCONNECTED) {
-            Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show();
+            noInterent(activity);
             return false;
         }else {
+            noInterent(activity);
             return false;
         }
+    }
+    private static void noInterent(final Activity activity){
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(activity.getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

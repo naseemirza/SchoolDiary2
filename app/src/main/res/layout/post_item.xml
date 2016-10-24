@@ -73,12 +73,12 @@
                             android:layout_width="0dp"
                             android:layout_height="200dp"
                             card_view:srcCompat="@drawable/kids"
-                            android:scaleType="centerCrop"
                             android:id="@+id/postimage"
                             app:layout_constraintTop_toBottomOf="@+id/text"
                             app:layout_constraintLeft_toLeftOf="parent"
                             android:layout_marginTop="10dp"
-                            app:layout_constraintRight_toRightOf="parent" />
+                            app:layout_constraintRight_toRightOf="parent"
+                            android:scaleType="fitCenter" />
 
                         <LinearLayout
                             android:orientation="horizontal"

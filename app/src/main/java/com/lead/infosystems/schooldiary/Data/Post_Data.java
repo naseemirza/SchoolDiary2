@@ -7,15 +7,16 @@ import android.graphics.drawable.Drawable;
  */
 
 public class Post_Data {
-    private String first_name,last_name,id,text_message,src_link,data;
+    private String first_name,last_name,id,text_message,src_link;
+    private long timeInmilisec;
 
-    public Post_Data(String first_name, String last_name, String id, String text_message, String src_link, String data) {
+    public Post_Data(String first_name, String last_name, String id, String text_message, String src_link, long timeInmilisec) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.id = id;
         this.text_message = text_message;
         this.src_link = src_link;
-        this.data = data;
+        this.timeInmilisec = timeInmilisec;
     }
 
     public String getFirst_name() {
@@ -38,7 +39,8 @@ public class Post_Data {
         return src_link;
     }
 
-    public String getData() {
-        return data;
+    public long getTimeInmilisec() {
+        return timeInmilisec;
     }
+
 }

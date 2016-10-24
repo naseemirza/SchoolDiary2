@@ -20,10 +20,12 @@ import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class AdapterItem extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
+public class AdapterItem extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
     private ArrayList<Post_Data> itemList;
@@ -35,21 +37,21 @@ public class AdapterItem extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
     private int visibleThreshold = 1;
     int firstVisibleItem, visibleItemCount, totalItemCount;
 
-    public interface OnLoadMoreListener{
+    public interface OnLoadMoreListener {
         void onLoadMore();
     }
 
     public AdapterItem(OnLoadMoreListener onLoadMoreListener, Context context) {
-        this.onLoadMoreListener=onLoadMoreListener;
+        this.onLoadMoreListener = onLoadMoreListener;
         this.context = context;
         itemList = new ArrayList<>();
     }
 
-    public void setLinearLayoutManager(LinearLayoutManager linearLayoutManager){
-        this.mLinearLayoutManager=linearLayoutManager;
+    public void setLinearLayoutManager(LinearLayoutManager linearLayoutManager) {
+        this.mLinearLayoutManager = linearLayoutManager;
     }
 
-    public void setRecyclerView(RecyclerView mView){
+    public void setRecyclerView(RecyclerView mView) {
         mView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -57,7 +59,7 @@ public class AdapterItem extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
                 visibleItemCount = recyclerView.getChildCount();
                 totalItemCount = mLinearLayoutManager.getItemCount();
                 firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
-                if (!isMoreLoading && (totalItemCount - visibleItemCount)<= (firstVisibleItem + visibleThreshold)) {
+                if (!isMoreLoading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
                     if (onLoadMoreListener != null) {
                         onLoadMoreListener.onLoadMore();
                     }
@@ -82,35 +84,57 @@ public class AdapterItem extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
 
     }
 
-    public void addAll(List<Post_Data> lst){
+    public void addAll(List<Post_Data> lst) {
         itemList.clear();
         itemList.addAll(lst);
         notifyDataSetChanged();
     }
 
-    public void addItemMore(List<Post_Data> lst){
+    public void addItemMore(List<Post_Data> lst) {
         itemList.addAll(lst);
-        notifyItemRangeChanged(0,itemList.size());
+        notifyItemRangeChanged(0, itemList.size());
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof StudentViewHolder) {
-            Post_Data singleItem = (Post_Data) itemList.get(position);
-            ((StudentViewHolder) holder).name.setText(singleItem.getFirst_name()+" "+singleItem.getLast_name());
-            ((StudentViewHolder) holder).time.setText(singleItem.getData());
+          final Post_Data singleItem = (Post_Data) itemList.get(position);
+            ((StudentViewHolder) holder).name.setText(singleItem.getFirst_name() + " " + singleItem.getLast_name());
+            ((StudentViewHolder) holder).time.setText(getTimeString(singleItem.getTimeInmilisec()));
             ((StudentViewHolder) holder).text.setText(singleItem.getText_message());
-            if(!singleItem.getSrc_link().isEmpty()) {
+            if (singleItem.getSrc_link().length()>5) {
+                ((StudentViewHolder) holder).postImage.setVisibility(View.VISIBLE);
                 Picasso.with(context).load(singleItem.getSrc_link())
                         .into(((StudentViewHolder) holder).postImage);
-            }else{
+            } else {
                 ((StudentViewHolder) holder).postImage.setVisibility(View.GONE);
             }
         }
     }
 
+    private String getTimeString(long postTime){
+        String time = "";
+        long seconds = (System.currentTimeMillis() - postTime)/1000;
+        if((seconds/(60*60*24*30))>365){
+
+        }else if(seconds > 518400){
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM-dd,  hh:mm a");
+            time = simpleDateFormat.format(new Date(postTime)).replace("  "," at ");
+        }else{
+            if(seconds < 60 ){
+                time  = seconds + " seconds ago";
+            }else if(seconds <  60 * 60){
+                time = (int)(seconds /60)+" min ago";
+            }else if(seconds < 86400){
+                time = (int) (seconds / (60*60))+"hr ago";
+            }else if(seconds < 604800){
+                time = (int) (seconds / (60*60*24)) + " days ago";
+            }
+        }
+        return time;
+    }
     public void setMoreLoading(boolean isMoreLoading) {
-        this.isMoreLoading=isMoreLoading;
+        this.isMoreLoading = isMoreLoading;
     }
 
     @Override
@@ -128,7 +152,9 @@ public class AdapterItem extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
                 }
             });
         } else {
+            if(itemList.size() != 0){
             itemList.remove(itemList.size() - 1);
+            }
             notifyItemRemoved(itemList.size());
         }
     }
@@ -150,18 +176,10 @@ public class AdapterItem extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
 
     static class ProgressViewHolder extends RecyclerView.ViewHolder {
         public ProgressBar pBar;
-        public TextView textView;
-        FragTabHome fragTabHome = new FragTabHome();
+
         public ProgressViewHolder(View v) {
             super(v);
             pBar = (ProgressBar) v.findViewById(R.id.pBar);
-            textView = (TextView) v.findViewById(R.id.no_more_items);
-            if(fragTabHome.lastItem()){
-                pBar.setVisibility(View.GONE);
-            }else {
-                textView.setVisibility(View.GONE);
-            }
-            Log.e("PLEASE",fragTabHome.lastItem()+"");
         }
     }
 }

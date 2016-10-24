@@ -2,6 +2,7 @@ package com.lead.infosystems.schooldiary.Data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,18 +10,19 @@ import org.json.JSONObject;
 
 public class UserDataSP {
 
-    public final String STUDENT_NUMBER = "student_number";
-    public final String DIVISION = "division";
-    public final String ROLL_NO = "roll_number";
-    public final String FIRST_NAME = "first_name";
-    public final String LAST_NAME = "last_name";
-    public final String FATHERS_NAME = "father_name";
-    public final String MOBILE_NUM = "mobile_no";
-    public final String ADDRESS = "address";
-    public final String EMAIL_ID = "email_id";
-    public final String BLOOD_GROUP = "blood_group";
-    public final String CLASS = "class";
-    public final String CLOUD_ID = "cloud_id";
+    public static final String STUDENT_NUMBER = "student_number";
+    public static final String DIVISION = "division";
+    public static final String ROLL_NO = "roll_number";
+    public static final String FIRST_NAME = "first_name";
+    public static final String LAST_NAME = "last_name";
+    public static final String FATHERS_NAME = "father_name";
+    public static final String MOBILE_NUM = "mobile_no";
+    public static final String ADDRESS = "address";
+    public static final String EMAIL_ID = "email_id";
+    public static final String BLOOD_GROUP = "blood_group";
+    public static final String CLASS = "class";
+    public static final String CLOUD_ID = "cloud_id";
+    public static final String POST_DATA = "POST_DATA";
 
 
     SharedPreferences sharedPreferences;
@@ -56,6 +58,20 @@ public class UserDataSP {
         editor.commit();
     }
 
+    public void storePostData(String postData){
+        editor.putString(POST_DATA,postData);
+        editor.commit();
+        Log.e("POST1",postData);
+    }
+    public void appendToPostData(String addendString){
+        String data = getPostData() + addendString;
+        data = data.replace("][",",");
+        editor.putString(POST_DATA,data);
+        editor.commit();
+    }
+    public String getPostData(){
+      return   sharedPreferences.getString(POST_DATA,"");
+    }
     public String getUserData(String key){
         return sharedPreferences.getString(key,"");
     }

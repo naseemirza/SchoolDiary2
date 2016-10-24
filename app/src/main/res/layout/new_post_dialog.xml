@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_height="200dp"
+        android:id="@+id/upload_post_image"
+        android:layout_width="match_parent"
+        android:src="@drawable/upload_image"
+        android:layout_margin="0dp"
+        />
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:id="@+id/post_text_field"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/upload_post_image"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:elevation="10dp"
+        android:hint="  Post Text..."
+        android:layout_height="80dp">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_below="@+id/upload_post_image"
+            android:background="@drawable/input_boder"
+            android:id="@+id/post_text"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
+            android:singleLine="false"
+            android:lines="3" />
+    </android.support.design.widget.TextInputLayout>
+    <Button
+        android:text="post"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/post_btn"
+        android:textColor="#FFFFFF"
+        android:background="@color/colorPrimary"
+        android:layout_below="@+id/post_text_field"
+        android:layout_margin="5dp"/>
+
+
+</RelativeLayout>

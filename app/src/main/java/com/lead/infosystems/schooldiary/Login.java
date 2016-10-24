@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.lead.infosystems.schooldiary.Data.Post_Data;
 import com.lead.infosystems.schooldiary.Data.UserDataSP;
 import com.lead.infosystems.schooldiary.Main.MainActivity;
 import com.lead.infosystems.schooldiary.ServerConnection.ServerConnect;
@@ -28,7 +30,6 @@ public class Login extends AppCompatActivity {
     EditText ePassword;
     String username;
     String password;
-    ServerConnect serverConnect;
     UserDataSP userDataSP;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +37,11 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         eUsername = (EditText) findViewById(R.id.username);
         ePassword = (EditText) findViewById(R.id.password);
-        serverConnect = new ServerConnect();
     }
     public void login_btn(View v){
         username = eUsername.getText().toString().trim();
         password = ePassword.getText().toString().trim();
-        if(serverConnect.checkInternetConenction(getApplicationContext())){
+        if(ServerConnect.checkInternetConenction(this)){
             if(!username.isEmpty() && !password.isEmpty()){
                 new ProfileLogin().execute();
             }else {
@@ -49,12 +49,17 @@ public class Login extends AppCompatActivity {
                 eUsername.setText("");
                 ePassword.setText("");
             }
-        }
+        }else {
+
+            }
+
     }
 
     public Context getContext(){
         return getApplicationContext();
     }
+
+
     private class ProfileLogin extends AsyncTask<String,Void,String>{
 
         ProgressDialog progressDialog = new ProgressDialog(Login.this);
@@ -72,7 +77,7 @@ public class Login extends AppCompatActivity {
             builder.appendQueryParameter("username",username);
             builder.appendQueryParameter("password",password);
             try {
-                return serverConnect.downloadUrl("login.php",builder.build().getEncodedQuery());
+                return ServerConnect.downloadUrl("login.php",builder.build().getEncodedQuery());
             } catch (IOException e) {
                 e.printStackTrace();
             }
