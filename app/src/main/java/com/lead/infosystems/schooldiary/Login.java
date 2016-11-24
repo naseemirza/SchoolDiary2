@@ -87,6 +87,7 @@ public class Login extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             progressDialog.dismiss();
+            Log.e("student_data",s);
             if(s != null){
                 if(!s.contains("ERROR")){
                 try {

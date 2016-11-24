@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">School Diary</string>
 
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -99,4 +100,7 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="home_work_diary"><![CDATA[Home Work & Diary]]></string>
+    <string name="pass_hint">Paper_Name</string>
+    <string name="email_hint">Paper_link</string>
+    <string name="pass_h">Paper_link</string>
 </resources>
